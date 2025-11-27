@@ -8,12 +8,12 @@ return {
     },
     config = function()
       require("flutter-tools").setup({
-        flutter_path = "/Path/to/flutter",
+        -- flutter_path = "/Path/to/flutter",
+        fvm = true, -- FVM 사용시 경로 변경 필수
         dev_tools = {
           autostart = true,
           auto_open_browser = true,
         },
-        fvm = false, -- FVM 사용시 경로 변경 필수
         dev_log = {
           enabled = true,
           notify_errors = true,
