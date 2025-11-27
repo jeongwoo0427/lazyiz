@@ -15,7 +15,7 @@ map({ "i" }, "<leader>.", vim.lsp.buf.completion, { remap = true, desc = "Trigge
 map({ "n" }, "<leader>.", vim.lsp.buf.signature_help, { remap = true, desc = "Signature help" })
 map({ "n" }, "<leader>h", vim.lsp.buf.hover, { remap = true, desc = "Hover" })
 map({ "n" }, "<leader>r", vim.lsp.buf.rename, { remap = true, desc = "Rename" })
-map({ "n", "v" }, "<leader><leader>", "l", { remap = true, desc = "NONE"})
+map({ "n", "v" }, "<leader><leader>", "l", { remap = true, desc = "NONE" })
 
 -- 여기에 d와 x가 클립보드에 복사되지 않도록 추가된 설정
 map({ "n", "v" }, "d", '"_d', { desc = "Delete without yanking" })
