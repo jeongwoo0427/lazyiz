@@ -5,8 +5,8 @@
 local map = vim.keymap.set
 
 map({ "n", "i", "v", "t" }, ";j", "<C-[>")
-map({ "n", "v" }, "<leader>j", "30j", { desc = "Move bottom 30" })
-map({ "n", "v" }, "<leader>k", "30k", { desc = "Move top 30" })
+map({ "n", "v" }, "<leader>j", "10j", { desc = "Move bottom 10" })
+map({ "n", "v" }, "<leader>k", "10k", { desc = "Move top 10" })
 map({ "n", "v" }, "T", ":Bwipeout<CR>", { remap = true, desc = "Close buffer (Lsp safe)" }) -- 필수: "famiu/bufdelete.nvim" 설치 필요
 map({ "n", "v" }, "<leader>t", "<C-/>", { remap = true, desc = "Terminal" })
 map({ "n", "v" }, "<leader>l", vim.lsp.buf.format, { remap = true, desc = "Code Format" })
