@@ -28,6 +28,11 @@ return {
         lsp = {               -- LanguageServerProtocol 관련 설정
           settings = {
             lineLength = 120, -- 코 정리시 라인 길이 기준
+          },
+          color = {
+            enabled = true,
+            background = true,
+            background_color = nil,
           }
         },
       }) -- 기본 설정으로 실행
