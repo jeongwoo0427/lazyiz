@@ -17,6 +17,11 @@ map({ "n" }, "<leader>h", vim.lsp.buf.hover, { remap = true, desc = "Hover" })
 map({ "n" }, "<leader>r", vim.lsp.buf.rename, { remap = true, desc = "Rename" })
 map({ "n", "v" }, "<leader><leader>", "l", { remap = true, desc = "NONE" })
 
+-- Noice 관련 키맵
+map("n", "<leader>n", "", { remap = true, })
+map("n", "<leader>nh", "<cmd>Noice history<CR>", { desc = "Noice history" })
+map({ "n", "v" }, "<leader>nd", "<cmd>Noice dismiss<CR>", { desc = "Dismiss notifications" })
+
 -- 여기에 d와 x가 클립보드에 복사되지 않도록 추가된 설정
 map({ "n", "v" }, "d", '"_d', { desc = "Delete without yanking" })
 map({ "n" }, "x", '"_x', { desc = "Delete character without yanking" })
