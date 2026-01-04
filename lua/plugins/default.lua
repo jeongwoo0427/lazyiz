@@ -17,16 +17,25 @@ return {
       }
     }
   },
+  { -- 모든 파일 표시하기
+    "folke/snacks.nvim",
+    opts = {
+      picker = {
+        hidden = true,  -- for hidden files
+        ignored = true, -- for .gitignore files
+      },
+    },
+  },
   { -- Git support
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim",        -- required
-      "sindrets/diffview.nvim",       -- Diff integration
+      "nvim-lua/plenary.nvim",         -- required
+      "sindrets/diffview.nvim",        -- Diff integration
       -- Only one of these is needed.
       "nvim-telescope/telescope.nvim", -- optional
-      "ibhagwan/fzf-lua",             -- optional
-      "nvim-mini/mini.pick",          -- optional
-      "folke/snacks.nvim",            -- optional
+      "ibhagwan/fzf-lua",              -- optional
+      "nvim-mini/mini.pick",           -- optional
+      "folke/snacks.nvim",             -- optional
     },
   },
 }
