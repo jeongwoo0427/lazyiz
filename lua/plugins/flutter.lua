@@ -25,9 +25,9 @@ return {
           run_via_dap = false,
           exception_breakpoints = {},
         },
-        lsp = {               -- LanguageServerProtocol 관련 설정
+        lsp = {              -- LanguageServerProtocol 관련 설정
           settings = {
-            lineLength = 120, -- 코 정리시 라인 길이 기준
+            lineLength = 80, -- 코 정리시 라인 길이 기준
           },
           color = {
             enabled = true,
