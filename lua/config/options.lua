@@ -7,21 +7,24 @@ vim.o.exrc = true        -- 프로젝트별.nvim.lua 자동 실행 여부
 vim.o.secure = true      -- .nvim.lua 안의 위험한 명령어 (:!, :luafile) 자동 차단 여부
 vim.o.mouse = ""
 
--- 시스템 클립보드와 동기화 설정
-vim.opt.clipboard = "unnamedplus"
+-- 서버에서 로컬로의 복사(OSC 52)는 허용하되, 붙여넣기는 서버 내부 기록을 사용하여 보안과 속도를 챙기는 반자동 클립보드 공유 설정.
+vim.o.clipboard = "unnamedplus"
 
--- OSC 52를 사용하여 원격 복사 활성화 (Neovim 0.10+ 기준)
-if vim.fn.has('wsl') == 0 and vim.fn.executable('pbcopy') == 0 and vim.fn.executable('xclip') == 0 and vim.fn.executable('wl-copy') == 0 then
-  vim.g.clipboard = {
-    name = 'OSC 52',
-    copy = {
-      ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-      ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-    },
-    paste = {
-      ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-      ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
-    },
+local function paste()
+  return {
+    vim.fn.split(vim.fn.getreg(""), "\n"),
+    vim.fn.getregtype(""),
   }
 end
 
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  },
+  paste = {
+    ["+"] = paste,
+    ["*"] = paste,
+  },
+}
