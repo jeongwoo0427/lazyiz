@@ -17,11 +17,6 @@ map({ "n" }, "<leader>h", vim.lsp.buf.hover, { remap = true, desc = "Hover" })
 map({ "n" }, "<leader>r", vim.lsp.buf.rename, { remap = true, desc = "Rename" })
 map({ "n", "v" }, "<leader><leader>", "l", { remap = true, desc = "NONE" })
 
--- Claude Code 전용 터미널 키맵 추가
-map({ "n", "v" }, "<leader>ai",
-  function() require("snacks").terminal("claude code", { win = { position = "right", width = 0.3 } }) end,
-  { desc = "Claude Code" })
-
 -- Noice 관련 키맵
 map("n", "<leader>n", "", { remap = true, })
 map("n", "<leader>nh", "<cmd>Noice history<CR>", { desc = "Noice history" })
