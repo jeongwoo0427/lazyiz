@@ -8,7 +8,7 @@ map({ "n", "i", "v", "t" }, ";j", "<C-[>")
 map({ "n", "v" }, "<leader>j", "10j", { desc = "Move bottom 10" })
 map({ "n", "v" }, "<leader>k", "10k", { desc = "Move top 10" })
 map({ "n", "v" }, "T", ":Bwipeout<CR>", { remap = true, desc = "Close buffer (Lsp safe)" }) -- 필수: "famiu/bufdelete.nvim" 설치 필요
-map({ "n", "v" }, "<leader>t", "<C-/>", { remap = true, desc = "Terminal" })
+
 map({ "n", "v" }, "<leader>l", vim.lsp.buf.format, { remap = true, desc = "Code Format" })
 map({ "n", "i", "v" }, "<leader><Enter>", vim.lsp.buf.code_action, { remap = true, desc = "Code Action" })
 map({ "i" }, "<leader>.", vim.lsp.buf.completion, { remap = true, desc = "Trigger completion" })
@@ -16,6 +16,11 @@ map({ "n" }, "<leader>.", vim.lsp.buf.signature_help, { remap = true, desc = "Si
 map({ "n" }, "<leader>h", vim.lsp.buf.hover, { remap = true, desc = "Hover" })
 map({ "n" }, "<leader>r", vim.lsp.buf.rename, { remap = true, desc = "Rename" })
 map({ "n", "v" }, "<leader><leader>", "l", { remap = true, desc = "NONE" })
+
+-- Claude Code 전용 터미널 키맵 추가
+map({ "n", "v" }, "<leader>ai",
+  function() require("snacks").terminal("claude code", { win = { position = "right", width = 0.3 } }) end,
+  { desc = "Claude Code" })
 
 -- Noice 관련 키맵
 map("n", "<leader>n", "", { remap = true, })

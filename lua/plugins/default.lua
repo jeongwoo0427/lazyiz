@@ -38,4 +38,15 @@ return {
       "folke/snacks.nvim",             -- optional
     },
   },
+  -- { -- Terminal screen plugin
+  --   "folke/snacks.nvim",
+  --   opts = {
+  --     terminal = {
+  --       win = {
+  --         position = "right", -- bottom에서 right로 변경
+  --         width = 0.4,        -- 화면의 40% 너비
+  --       },
+  --     },
+  --   },
+  -- },
 }
