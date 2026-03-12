@@ -39,6 +39,12 @@ return {
     },
   },
   {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = { "markdown" },
+    opts = {},
+  },
+  {
     "coder/claudecode.nvim",
     dependencies = { "folke/snacks.nvim" },
     config = true,
@@ -63,7 +69,7 @@ return {
       terminal = {
         split_side = "right", -- "left" or "right"
         split_width_percentage = 0.30,
-        provider = "auto",  -- "auto", "snacks", "native", "external", "none", or custom provider table
+        provider = "auto",    -- "auto", "snacks", "native", "external", "none", or custom provider table
         auto_close = true,
         snacks_win_opts = {}, -- Opts to pass to `Snacks.terminal.open()` - see Floating Window section below
 
