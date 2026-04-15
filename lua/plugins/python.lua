@@ -44,16 +44,28 @@ return {
     },
   },
 
-  -- pyright: 외부 라이브러리 코드 추적 활성화
+  -- pyright: 외부 라이브러리 코드 추적 + venv 자동 감지
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         pyright = {
+          -- pyright 시작 시 프로젝트 루트 기준으로 venv python 자동 설정
+          on_new_config = function(config, root_dir)
+            for _, name in ipairs({ ".venv", "venv", "env" }) do
+              local python = root_dir .. "/" .. name .. "/bin/python"
+              if vim.fn.executable(python) == 1 then
+                config.settings = config.settings or {}
+                config.settings.python = config.settings.python or {}
+                config.settings.python.pythonPath = python
+                break
+              end
+            end
+          end,
           settings = {
             python = {
               analysis = {
-                useLibraryCodeForTypes = true,  -- 서드파티 소스코드로 타입 추론
+                useLibraryCodeForTypes = true,
                 autoImportCompletions = true,
                 diagnosticMode = "workspace",
               },
