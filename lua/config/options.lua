@@ -10,6 +10,12 @@ vim.o.mouse = ""
 -- 서버에서 로컬로의 복사(OSC 52)는 허용하되, 붙여넣기는 서버 내부 기록을 사용하여 보안과 속도를 챙기는 반자동 클립보드 공유 설정.
 vim.o.clipboard = "unnamedplus"
 
+-- LSP Server to use for Python.
+-- Set to "basedpyright" to use basedpyright instead of pyright.
+vim.g.lazyvim_python_lsp = "pyright"
+-- Set to "ruff_lsp" to use the old LSP implementation version.
+vim.g.lazyvim_python_ruff = "ruff"
+
 local function paste()
   return {
     vim.fn.split(vim.fn.getreg(""), "\n"),
