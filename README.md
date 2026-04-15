@@ -16,7 +16,7 @@ brew install neovim python@3.11 node git ripgrep fd
 **Linux (Ubuntu)**
 ```bash
 sudo add-apt-repository ppa:neovim-ppa/unstable -y && sudo apt update
-sudo apt install -y neovim python3.11 python3-pip nodejs npm git ripgrep
+sudo apt install -y neovim python3 python3-pip nodejs npm git ripgrep
 ```
 
 ---
@@ -47,35 +47,40 @@ nvim  # 실행하면 lazy.nvim이 자동으로 플러그인 설치 시작
 ### Python 패키지 설치
 
 ```bash
-pip3.11 install pynvim jupyter_client ipykernel
+pip3 install pynvim jupyter_client ipykernel
 ```
+
+> Ubuntu에서 `externally-managed-environment` 에러가 뜨면 `--break-system-packages` 옵션 추가:
+> ```bash
+> pip3 install pynvim jupyter_client ipykernel --break-system-packages
+> ```
 
 ### Jupyter 커널 등록
 
 ```bash
-python3.11 -m ipykernel install --user --name python3
+python3 -m ipykernel install --user --name python3 --display-name "Python 3"
 
-# macOS에서 runtime 디렉토리가 없으면 생성
-mkdir -p ~/Library/Jupyter/runtime
+# runtime 디렉토리가 없으면 생성
+mkdir -p ~/.local/share/jupyter/runtime      # Linux
+mkdir -p ~/Library/Jupyter/runtime           # macOS
 ```
 
-### python3_host_prog 경로 수정
+### python3_host_prog 경로
 
-`lua/config/options.lua` 에서 본인 Python 경로로 수정:
+`lua/config/options.lua` 에서 `vim.fn.exepath()` 로 PATH에서 자동 탐색하도록 설정되어 있어 별도 수정 불필요:
 
 ```lua
-vim.g.python3_host_prog = "/opt/homebrew/bin/python3.11"  -- macOS
--- vim.g.python3_host_prog = "/usr/bin/python3.11"        -- Linux
+vim.g.python3_host_prog = vim.fn.exepath("python3")
 ```
-
-확인: `which python3.11`
 
 ### molten remote plugin 등록 (필수)
 
 > 이 단계를 빠뜨리면 `E492: Not an editor command: MoltenEvaluateLine` 에러 발생.
+> nvim 최초 설치 후 **반드시 한 번** 실행해야 한다.
 
 ```bash
 nvim --headless \
+  -c "let g:python3_host_prog=exepath('python3')" \
   -c "set rtp+=~/.local/share/nvim/lazy/molten-nvim" \
   -c "UpdateRemotePlugins" \
   -c "qa"
@@ -152,6 +157,7 @@ LSP(ts_ls), 자동완성, 포맷팅이 자동으로 설정된다.
 | 에러 | 해결 |
 |------|------|
 | `E492: Not an editor command: MoltenEvaluateLine` | molten remote plugin 등록 단계 재실행 |
-| `Could not initialize kernel named 'python3'` | `ipykernel install --user` 및 `mkdir -p ~/Library/Jupyter/runtime` |
-| `No module named 'pynvim'` | `python3_host_prog` 경로의 Python에 `pip install pynvim` |
+| `Could not initialize kernel named 'python3'` | `ipykernel install --user` 및 `mkdir -p ~/.local/share/jupyter/runtime` |
+| `No module named 'pynvim'` | `pip3 install pynvim` 후 remote plugin 등록 재실행 |
+| `Failed to load python3 host` | `python3_host_prog` 경로 확인: `vim.fn.exepath("python3")` 반환값이 비어있으면 PATH에 python3 추가 |
 | VenvSelect branch 경고 | `lua/plugins/python.lua` 에서 `branch = "main"` 확인 |
