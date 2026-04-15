@@ -1,35 +1,8 @@
--- 현재 파일 기준으로 상위 디렉토리까지 venv 탐색
-local function find_python()
-  -- 1. 활성화된 venv 환경변수 우선
-  local venv_env = os.getenv("VIRTUAL_ENV")
-  if venv_env then
-    return venv_env .. "/bin/python"
-  end
-
-  -- 2. 현재 버퍼 디렉토리에서 상위로 탐색
-  local buf_dir = vim.fn.expand("%:p:h")
-  if buf_dir == "" then
-    buf_dir = vim.fn.getcwd()
-  end
-
-  for _, name in ipairs({ ".venv", "venv", "env" }) do
-    local found = vim.fn.finddir(name, buf_dir .. ";")
-    if found ~= "" then
-      local python = vim.fn.fnamemodify(found, ":p") .. "bin/python"
-      if vim.fn.executable(python) == 1 then
-        return python
-      end
-    end
-  end
-
-  return "python3"
-end
-
 return {
   -- 가상환경 선택기
   {
     "linux-cultist/venv-selector.nvim",
-    branch = "regexp",
+    branch = "main",
     dependencies = { "neovim/nvim-lspconfig", "nvim-telescope/telescope.nvim" },
     cmd = "VenvSelect",
     opts = {
@@ -50,18 +23,6 @@ return {
     opts = {
       servers = {
         pyright = {
-          -- pyright 시작 시 프로젝트 루트 기준으로 venv python 자동 설정
-          on_new_config = function(config, root_dir)
-            for _, name in ipairs({ ".venv", "venv", "env" }) do
-              local python = root_dir .. "/" .. name .. "/bin/python"
-              if vim.fn.executable(python) == 1 then
-                config.settings = config.settings or {}
-                config.settings.python = config.settings.python or {}
-                config.settings.python.pythonPath = python
-                break
-              end
-            end
-          end,
           settings = {
             python = {
               analysis = {
@@ -76,33 +37,65 @@ return {
     },
   },
 
-  -- Python 테스트 (neotest-python)
+  -- 인라인 이미지 렌더링 (matplotlib 그래프 등)
+  -- wezterm / kitty / iTerm2 터미널 사용 시 이미지 표시 가능
   {
-    "nvim-neotest/neotest",
-    optional = true,
-    dependencies = {
-      "nvim-neotest/neotest-python",
-    },
+    "3rd/image.nvim",
+    lazy = true,
     opts = {
-      adapters = {
-        ["neotest-python"] = {
-          runner = "pytest",
-          python = find_python,
-        },
-      },
+      backend = "kitty",       -- wezterm 쓰면 "kitty" 그대로 동작, iTerm2면 "ueberzug"로 변경
+      integrations = {},
+      max_width = 100,
+      max_height = 12,
+      max_height_window_percentage = math.huge,
+      max_width_window_percentage = math.huge,
+      window_overlap_clear_enabled = true,
+      window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
     },
   },
 
-  -- Python DAP (디버깅)
+  -- Jupyter 커널 연동 (molten-nvim)
   {
-    "mfussenegger/nvim-dap-python",
-    -- stylua: ignore
-    keys = {
-      { "<leader>dPt", function() require("dap-python").test_method() end, desc = "Debug Method", ft = "python" },
-      { "<leader>dPc", function() require("dap-python").test_class() end,  desc = "Debug Class",  ft = "python" },
-    },
-    config = function()
-      require("dap-python").setup(find_python())
+    "benlubas/molten-nvim",
+    version = "^1.0.0",
+    build = ":UpdateRemotePlugins",
+    dependencies = { "3rd/image.nvim" },
+    init = function()
+      -- 출력 창 최대 높이
+      vim.g.molten_output_win_max_height = 12
+      -- 셀 실행 후 자동으로 출력창 열기
+      vim.g.molten_auto_open_output = false
+      -- 커서가 셀 밖으로 나가면 출력창 닫기
+      vim.g.molten_auto_close_output_windows = true
+      -- 마크다운 렌더링
+      vim.g.molten_use_border_highlights = true
+      -- 이미지 렌더러: image.nvim 사용
+      vim.g.molten_image_provider = "image.nvim"
+      -- 가상 텍스트로 셀 구분선 표시
+      vim.g.molten_virt_text_output = true
+      vim.g.molten_virt_lines_off_by_1 = true
     end,
+    keys = {
+      -- 커널 초기화 / 선택
+      { "<leader>mi", ":MoltenInit<CR>",                              desc = "Molten: 커널 초기화",         ft = { "python", "julia" } },
+      { "<leader>md", ":MoltenDeinit<CR>",                           desc = "Molten: 커널 종료",           ft = { "python", "julia" } },
+      -- 셀 실행
+      { "<leader>me", ":MoltenEvaluateOperator<CR>",                 desc = "Molten: 범위 실행 (operator)", ft = { "python", "julia" } },
+      { "<leader>ml", ":MoltenEvaluateLine<CR>",                     desc = "Molten: 현재 줄 실행",        ft = { "python", "julia" } },
+      { "<leader>mr", ":MoltenReevaluateCell<CR>",                   desc = "Molten: 셀 재실행",           ft = { "python", "julia" } },
+      -- 비주얼 모드 실행
+      { "<leader>mv", ":<C-u>MoltenEvaluateVisual<CR>gv",            desc = "Molten: 선택 영역 실행",      mode = "v",                 ft = { "python", "julia" } },
+      -- 출력 창
+      { "<leader>mo", ":MoltenShowOutput<CR>",                       desc = "Molten: 출력 표시",           ft = { "python", "julia" } },
+      { "<leader>mh", ":MoltenHideOutput<CR>",                       desc = "Molten: 출력 숨기기",         ft = { "python", "julia" } },
+      -- 셀 이동
+      { "[c",         ":MoltenPrev<CR>",                             desc = "Molten: 이전 셀",             ft = { "python", "julia" } },
+      { "]c",         ":MoltenNext<CR>",                             desc = "Molten: 다음 셀",             ft = { "python", "julia" } },
+      -- 셀 삭제
+      { "<leader>mx", ":MoltenDelete<CR>",                           desc = "Molten: 셀 삭제",             ft = { "python", "julia" } },
+      -- 인터럽트 / 재시작
+      { "<leader>ms", ":MoltenInterrupt<CR>",                        desc = "Molten: 실행 중단",           ft = { "python", "julia" } },
+      { "<leader>mR", ":MoltenRestart!<CR>",                         desc = "Molten: 커널 재시작",         ft = { "python", "julia" } },
+    },
   },
 }
