@@ -62,6 +62,21 @@ return {
       "folke/snacks.nvim",             -- optional
     },
   },
+  { -- markdown/마크업 문서의 코드블록에 LSP 붙이기 (언어 무관: python/js/ts 등)
+    "jmbuhr/otter.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = { "markdown" },
+    config = function()
+      local function activate()
+        require("otter").activate() -- 인자 없음 = 문서에 있는 모든 언어 대상
+      end
+      vim.api.nvim_create_autocmd("FileType", { pattern = "markdown", callback = activate })
+      -- 플러그인을 처음 로드시킨 버퍼는 FileType 이벤트가 이미 지나갔으므로 즉시 활성화
+      if vim.bo.filetype == "markdown" then
+        activate()
+      end
+    end,
+  },
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
