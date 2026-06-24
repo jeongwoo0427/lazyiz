@@ -57,10 +57,20 @@ nvim  # 실행하면 lazy.nvim이 자동으로 플러그인 설치 시작
 python3 -m venv ~/.venvs/molten
 source ~/.venvs/molten/bin/activate
 
+# 플러그인 설치 (필요한 부분만 설치하기)
 # 필수: molten 동작용
 pip install pynvim jupyter_client ipykernel
-# 코랩처럼 쓰려면 실제 라이브러리도 함께 (예시)
-pip install numpy pandas matplotlib
+# 코어 데이터 스택
+pip install numpy pandas scipy matplotlib seaborn plotly
+# ML
+pip install scikit-learn xgboost lightgbm
+# 딥러닝 (M4 MPS 가속 지원)
+pip install torch torchvision torchaudio  # Apple Silicon용 자동 감지
+# NLP / AI 실험용
+pip install transformers datasets tokenizers
+# 유틸
+pip install tqdm requests pillow opencv-python
+
 
 # 커널 등록
 python -m ipykernel install --user --name molten --display-name "Python (molten)"
