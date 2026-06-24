@@ -61,6 +61,8 @@ pip install numpy pandas matplotlib
 
 # 커널 등록
 python -m ipykernel install --user --name molten --display-name "Python (molten)"
+
+# 가상환경 나오
 deactivate
 ```
 
