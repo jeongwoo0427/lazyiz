@@ -84,6 +84,14 @@ return {
       -- 가상 텍스트로 셀 구분선 표시
       vim.g.molten_virt_text_output = true
       vim.g.molten_virt_lines_off_by_1 = true
+
+      -- 출력 virt text 색을 주황색으로 (기본은 Comment에 연결돼 회색이라 안 보임)
+      -- ColorScheme 적용 후에 덮어써야 살아남음
+      local function set_molten_hl()
+        vim.api.nvim_set_hl(0, "MoltenVirtualText", { fg = "#ff9e64", bold = true })
+      end
+      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_molten_hl })
+      set_molten_hl()
     end,
     keys = {
       -- 커널 초기화 / 선택
@@ -93,6 +101,25 @@ return {
       { "<leader>me", ":MoltenEvaluateOperator<CR>", desc = "Molten: 범위 실행 (operator)", ft = { "python", "julia" } },
       { "<leader>ml", ":MoltenEvaluateLine<CR>", desc = "Molten: 현재 줄 실행", ft = { "python", "julia" } },
       { "<leader>mr", ":MoltenReevaluateCell<CR>", desc = "Molten: 셀 재실행", ft = { "python", "julia" } },
+      -- 현재 # %% 셀 통째로 실행 (범위 지정 불필요 — 커서만 셀 안에 두면 됨)
+      {
+        "<leader>mc",
+        function()
+          local marker = "^#%s*%%%%" -- "# %%" / "#%%" 매칭
+          local cur, last = vim.fn.line("."), vim.fn.line("$")
+          local s = 1
+          for l = cur, 1, -1 do
+            if vim.fn.getline(l):match(marker) then s = l break end
+          end
+          local e = last
+          for l = s + 1, last do
+            if vim.fn.getline(l):match(marker) then e = l - 1 break end
+          end
+          vim.fn.MoltenEvaluateRange(s, e)
+        end,
+        desc = "Molten: 현재 셀 실행",
+        ft = { "python", "julia" },
+      },
       -- 비주얼 모드 실행
       { "<leader>mv", ":<C-u>MoltenEvaluateVisual<CR>gv", desc = "Molten: 선택 영역 실행", mode = "v", ft = { "python", "julia" } },
       -- 출력 창
