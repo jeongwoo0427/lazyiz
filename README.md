@@ -69,11 +69,16 @@ deactivate
 ### 2단계 — molten remote plugin 등록 (최초 1회 필수)
 
 > 빼먹으면 `:MoltenInit` 등 명령어 자체가 없다 (`E492` 에러).
-> 1단계 venv 덕분에 호스트가 자동으로 잡히므로 명령은 짧다.
+> molten은 lazy-load라 headless 모드에선 runtimepath에 안 올라오므로 `set rtp+=` 가 꼭 필요하다.
 
 ```bash
-nvim --headless -c "UpdateRemotePlugins" -c "qa"
+nvim --headless \
+  -c "set rtp+=~/.local/share/nvim/lazy/molten-nvim" \
+  -c "UpdateRemotePlugins" \
+  -c "qa"
 ```
+
+> 등록 후 **nvim을 완전히 재시작**해야 명령어가 반영된다.
 
 ### 사용법
 
