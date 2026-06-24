@@ -17,6 +17,23 @@ return {
     },
   },
 
+  -- .ipynb 노트북 지원: 열 때 # %% 셀 형식 python 버퍼로 자동 변환, 저장 시 ipynb로 복원
+  -- (molten 단독으론 ipynb 편집 불가 → jupytext가 변환을 담당)
+  {
+    "GCBallesteros/jupytext.nvim",
+    -- ipynb 변환은 BufReadCmd로 동작 → lazy 이벤트론 누락될 수 있어 즉시 로드
+    lazy = false,
+    -- jupytext CLI(venv)를 nvim이 찾도록 venv bin을 PATH에 추가
+    init = function()
+      vim.env.PATH = vim.fn.expand("~/.venvs/molten/bin") .. ":" .. vim.env.PATH
+    end,
+    opts = {
+      style = "hydrogen",   -- # %% 셀 형식 (.py 워크플로와 동일)
+      output_extension = "auto",
+      force_ft = nil,
+    },
+  },
+
   -- pyright: 외부 라이브러리 코드 추적 + venv 자동 감지
   {
     "neovim/nvim-lspconfig",
@@ -84,6 +101,14 @@ return {
       -- 가상 텍스트로 셀 구분선 표시
       vim.g.molten_virt_text_output = true
       vim.g.molten_virt_lines_off_by_1 = true
+
+      -- 출력 virt text 색을 주석과 구분되게 (기본은 Comment에 연결돼 회색)
+      -- ColorScheme 적용 후에 덮어써야 살아남음
+      local function set_molten_hl()
+        vim.api.nvim_set_hl(0, "MoltenVirtualText", { fg = "#7aa2f7", bold = true })
+      end
+      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_molten_hl })
+      set_molten_hl()
     end,
     keys = {
       -- 커널 초기화 / 선택

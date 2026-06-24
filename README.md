@@ -58,8 +58,8 @@ python3 -m venv ~/.venvs/molten
 source ~/.venvs/molten/bin/activate
 
 # 플러그인 설치 (필요한 부분만 설치하기)
-# 필수: molten 동작용
-pip install pynvim jupyter_client ipykernel
+# 필수: molten 동작용 + ipynb 변환용(jupytext)
+pip install pynvim jupyter_client ipykernel jupytext
 # 코어 데이터 스택
 pip install numpy pandas scipy matplotlib seaborn plotly
 # ML
@@ -100,6 +100,10 @@ nvim --headless \
 > 등록 후 **nvim을 완전히 재시작**해야 명령어가 반영된다.
 
 ### 사용법
+
+`.py` 와 `.ipynb` **둘 다 같은 방식으로** 동작한다.
+`.ipynb`는 `jupytext.nvim`이 열 때 자동으로 `# %%` 셀이 있는 python 버퍼로 변환해주고,
+저장하면 다시 `.ipynb`로 복원한다 → filetype이 `python`이 되어 아래 molten 키맵이 그대로 작동.
 
 `.py` 파일에서 `# %%` 로 셀 구분:
 
@@ -182,4 +186,6 @@ LSP(ts_ls), 자동완성, 포맷팅이 자동으로 설정된다.
 | `Could not initialize kernel named ...` | ① `No such file or directory: .../runtime/...json` 면 1단계의 runtime 디렉토리 보장 명령 재실행. ② 그 외엔 `jupyter kernelspec list` 로 `molten` 커널 확인, 없으면 `ipykernel install` 재실행 |
 | `Failed to load python3 host` | `~/.venvs/molten/bin/python3` 존재 확인, 없으면 1단계부터 재실행 |
 | 커널은 뜨는데 그래프가 안 보임 | ① `imagemagick` 설치 확인(`magick -version`) — image.nvim 렌더링 필수. ② 이미지 지원 터미널(kitty/wezterm/Ghostty) 사용. ③ 셀 실행 후 `<leader>mo` 로 출력 창 열기. ④ iTerm2면 `image.nvim` backend 를 `ueberzug` 로 변경 |
+| `.ipynb` 열 때 `attempt to index field 'kernelspec'` | 노트북에 kernelspec 메타데이터가 없는 경우(드묾). Jupyter/Colab에서 만든 노트북은 정상. `jupyter nbconvert --to notebook <file>` 로 메타데이터 보강 |
+| `.ipynb` 가 JSON 그대로 열림 / molten 키맵 안 먹음 | jupytext 누락 → venv에 `pip install jupytext` + `jupytext.nvim` 설치(`:Lazy sync`) 후 재시작 |
 
