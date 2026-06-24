@@ -81,7 +81,14 @@ return {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     ft = { "markdown" },
-    opts = {},
+    opts = {
+      -- 커서가 있는 줄도 렌더 상태 유지 → 커서 이동 시 줄이 펴졌다 접혔다 안 함(흔들림 제거)
+      anti_conceal = { enabled = false },
+      code = {
+        border = "none",
+        style = "full",
+      },
+    },
   },
   {
     "coder/claudecode.nvim",
