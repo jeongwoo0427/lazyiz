@@ -17,6 +17,30 @@ return {
       }
     }
   },
+  { -- 파일/코드 통째로 실행 (:FlutterRun 스타일, 언어 무관)
+    "CRAG666/code_runner.nvim",
+    cmd = { "RunCode", "RunFile", "RunProject", "RunClose" },
+    opts = {
+      -- 출력 표시 방식: "term"(하단 터미널) | "tab" | "toggleterm" | "float"
+      mode = "term",
+      focus = true,
+      startinsert = false,
+      term = {
+        position = "bot", -- 하단에 열기
+        size = 12,
+      },
+      filetype = {
+        -- 언어별 실행 커맨드 (필요한 언어 여기에 추가)
+        python = "python3 -u", -- -u: 출력 버퍼링 끄기 (실시간 출력)
+        javascript = "node",
+        sh = "bash",
+      },
+    },
+    keys = {
+      { "<leader>rr", "<cmd>RunFile<cr>",  desc = "Run: 현재 파일 실행" },
+      { "<leader>rc", "<cmd>RunClose<cr>", desc = "Run: 출력창 닫기" },
+    },
+  },
   { -- 모든 파일 표시하기
     "folke/snacks.nvim",
     opts = {
