@@ -113,6 +113,8 @@ return {
       vim.g.molten_auto_close_output_windows = true
       -- 마크다운 렌더링
       vim.g.molten_use_border_highlights = true
+      -- 출력창 border: {좌상,상,우상,우,우하,하,좌하,좌}. 하단(6번째)을 공백으로 → 하단 여백 한 줄
+      vim.g.molten_output_win_border = { "", "━", "", "", "", " ", "", "" }
       -- 이미지 렌더러: image.nvim 사용
       vim.g.molten_image_provider = "image.nvim"
       -- virt text 출력은 끔 (켜져 있으면 실행 시 floating 창이 자동으로 안 뜸 — moltenbuffer.py:120)
