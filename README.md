@@ -62,6 +62,10 @@ pip install numpy pandas matplotlib
 # 커널 등록
 python -m ipykernel install --user --name molten --display-name "Python (molten)"
 
+# Jupyter runtime 디렉토리 보장 (없으면 커널 connection 파일을 못 써서
+# "Could not initialize kernel" 에러. 경로는 jupyter가 직접 계산 → OS 무관)
+python -c "import os, jupyter_core.paths as p; os.makedirs(p.jupyter_runtime_dir(), exist_ok=True)"
+
 # 가상환경 나오
 deactivate
 ```
