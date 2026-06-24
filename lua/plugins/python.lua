@@ -105,8 +105,14 @@ return {
       }
     },
     init = function()
-      -- 출력 창 최대 높이
-      vim.g.molten_output_win_max_height = 12
+      -- 출력 창 최대 높이 (긴 에러 트레이스백 대비 넉넉하게)
+      vim.g.molten_output_win_max_height = 20
+      -- 출력창 안에서 긴 에러 줄을 가로로 잘리지 않게 줄바꿈
+      vim.g.molten_wrap_output = true
+      -- inline virtual text 출력도 12줄에서 잘리니 늘림
+      vim.g.molten_virt_text_max_lines = 20
+      -- <leader>mo 한 번에 출력창 열고 바로 진입 → j/k로 스크롤/복사 가능
+      vim.g.molten_enter_output_behavior = "open_and_enter"
       -- 셀 실행하면 floating 출력창(<leader>mo) 자동으로 띄우기
       vim.g.molten_auto_open_output = false
       -- 커서가 셀 밖으로 나가면 출력창 닫기
@@ -142,7 +148,7 @@ return {
       -- 비주얼 모드 실행
       { "<leader>mv", ":<C-u>MoltenEvaluateVisual<CR>gv", desc = "Molten: 선택 영역 실행", mode = "v", ft = { "python", "julia", "markdown" } },
       -- 출력 창
-      { "<leader>mo", ":MoltenShowOutput<CR>", desc = "Molten: 출력 표시", ft = { "python", "julia", "markdown" } },
+      { "<leader>mo", ":noautocmd MoltenEnterOutput<CR>", desc = "Molten: 출력 표시/진입(스크롤)", ft = { "python", "julia", "markdown" } },
       { "<leader>mh", ":MoltenHideOutput<CR>", desc = "Molten: 출력 숨기기", ft = { "python", "julia", "markdown" } },
       -- 셀 이동
       { "[c", ":MoltenPrev<CR>", desc = "Molten: 이전 셀", ft = { "python", "julia", "markdown" } },
