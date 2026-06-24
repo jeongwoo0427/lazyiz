@@ -42,59 +42,38 @@ nvim  # 실행하면 lazy.nvim이 자동으로 플러그인 설치 시작
 
 ---
 
-## Python (Jupyter 스타일 실행)
+## Python (Jupyter / Colab 스타일 실행)
 
-시스템 Python을 직접 쓰지 않고, **`~/.venvs/molten` 전용 venv**를 만들어 커널을 등록해서 사용한다.
+설치만으로는 동작하지 않는다. **`~/.venvs/molten` 전용 venv 하나**를 만들어야 한다.
+이 venv가 molten의 호스트 + 주피터 커널 역할을 동시에 한다.
+(`lua/config/options.lua` 가 이 venv를 자동 감지 → 없으면 시스템 python3로 폴백)
 
----
-
-### 1단계 — Molten 전용 venv 생성 (최초 1회)
+### 1단계 — venv 생성 + 패키지 설치 + 커널 등록 (최초 1회)
 
 ```bash
 python3 -m venv ~/.venvs/molten
-```
-
----
-
-### 2단계 — 패키지 설치 & 커널 등록
-
-```bash
 source ~/.venvs/molten/bin/activate
-# 프롬프트 앞에 (molten) 표시가 나타나면 정상
 
+# 필수: molten 동작용
 pip install pynvim jupyter_client ipykernel
+# 코랩처럼 쓰려면 실제 라이브러리도 함께 (예시)
+pip install numpy pandas matplotlib
 
+# 커널 등록
 python -m ipykernel install --user --name molten --display-name "Python (molten)"
-
 deactivate
 ```
 
-등록된 커널 목록 확인:
-```bash
-jupyter kernelspec list
-```
+> 나중에 라이브러리 추가는 `source ~/.venvs/molten/bin/activate && pip install <패키지>` 로.
 
-> **runtime 디렉토리가 없으면 생성:**
-> ```bash
-> mkdir -p ~/.local/share/jupyter/runtime      # Linux
-> mkdir -p ~/Library/Jupyter/runtime           # macOS
-> ```
+### 2단계 — molten remote plugin 등록 (최초 1회 필수)
 
----
-
-### 3단계 — molten remote plugin 등록 (최초 1회 필수)
-
-> 이 단계를 빠뜨리면 `E492: Not an editor command: MoltenEvaluateLine` 에러 발생.
+> 빼먹으면 `:MoltenInit` 등 명령어 자체가 없다 (`E492` 에러).
+> 1단계 venv 덕분에 호스트가 자동으로 잡히므로 명령은 짧다.
 
 ```bash
-nvim --headless \
-  -c "let g:python3_host_prog=expand('~/.venvs/molten/bin/python3')" \
-  -c "set rtp+=~/.local/share/nvim/lazy/molten-nvim" \
-  -c "UpdateRemotePlugins" \
-  -c "qa"
+nvim --headless -c "UpdateRemotePlugins" -c "qa"
 ```
-
----
 
 ### 사용법
 
@@ -106,22 +85,26 @@ import numpy as np
 print(np.array([1,2,3]).mean())
 
 # %% 셀 2
-print("다른 셀")
+import matplotlib.pyplot as plt
+plt.plot([1,2,3]); plt.show()
 ```
 
-**워크플로:**
-1. `:MoltenInit` — 커널 목록에서 `Python (molten)` 선택
-2. 이후 셀 실행
+1. `<leader>mi` (`:MoltenInit`) → 커널 목록에서 **`Python (molten)`** 선택
+2. 이후 키로 셀 실행
 
 | 키 | 동작 |
 |----|------|
-| `:MoltenInit` | 커널 선택 후 시작 |
+| `<leader>mi` | 커널 선택 후 시작 |
 | `<leader>ml` | 현재 줄 실행 |
+| `<leader>me` | 범위(operator) 실행 |
 | `v` 선택 후 `<leader>mv` | 선택 영역 실행 |
 | `<leader>mo` / `<leader>mh` | 출력 창 표시 / 숨기기 |
-| `<leader>ms` | 실행 중단 |
-| `<leader>mR` | 커널 재시작 |
+| `[c` / `]c` | 이전 / 다음 셀 |
+| `<leader>ms` / `<leader>mR` | 실행 중단 / 커널 재시작 |
 | `<leader>cv` | 가상환경 변경 (VenvSelect) |
+
+> **그래프 이미지**(matplotlib 등)는 kitty / wezterm / Ghostty 같은 이미지 지원 터미널에서만 보인다.
+> iTerm2는 `lua/plugins/python.lua` 의 `image.nvim` backend를 `"ueberzug"` 로 변경. 기본 Terminal.app은 텍스트만 표시.
 
 ---
 
@@ -170,9 +153,9 @@ LSP(ts_ls), 자동완성, 포맷팅이 자동으로 설정된다.
 
 | 에러 | 해결 |
 |------|------|
-| `E492: Not an editor command: MoltenEvaluateLine` | molten remote plugin 등록 단계 재실행 |
-| `Could not initialize kernel named ...` | `jupyter kernelspec list` 로 커널 등록 확인, `.venv/bin/python -m ipykernel install --user` 재실행 |
-| `No module named 'pynvim'` | `source ~/.venvs/molten/bin/activate && pip install pynvim` 후 remote plugin 등록 재실행 |
-| `Failed to load python3 host` | `~/.venvs/molten/bin/python3` 파일 존재 확인, 없으면 1단계부터 재실행 |
-| VenvSelect branch 경고 | `lua/plugins/python.lua` 에서 `branch = "main"` 확인 |
+| `E492: Not an editor command: MoltenInit` | Python 2단계(remote plugin 등록) 재실행 |
+| `No module named 'pynvim'` | venv에 설치 안 됨 → `source ~/.venvs/molten/bin/activate && pip install pynvim` 후 2단계 재실행 |
+| `Could not initialize kernel named ...` | `jupyter kernelspec list` 로 `molten` 커널 확인, 없으면 1단계의 `ipykernel install` 재실행 |
+| `Failed to load python3 host` | `~/.venvs/molten/bin/python3` 존재 확인, 없으면 1단계부터 재실행 |
+| 커널은 뜨는데 그래프가 안 보임 | 이미지 지원 터미널(kitty/wezterm/Ghostty) 사용 또는 `image.nvim` backend 변경 |
 

@@ -4,7 +4,10 @@
 
 vim.g.autoformat = false -- 수정 마친 후 자동 정렬 활성 여부
 
-vim.g.python3_host_prog = vim.fn.exepath("python3")
+-- molten 전용 venv를 호스트로 사용 (pynvim + jupyter_client 설치 필요).
+-- venv가 없으면 시스템 python3로 폴백.
+local molten_py = vim.fn.expand("~/.venvs/molten/bin/python3")
+vim.g.python3_host_prog = vim.fn.executable(molten_py) == 1 and molten_py or vim.fn.exepath("python3")
 vim.o.exrc = true        -- 프로젝트별.nvim.lua 자동 실행 여부
 vim.o.secure = true      -- .nvim.lua 안의 위험한 명령어 (:!, :luafile) 자동 차단 여부
 vim.o.mouse = ""
