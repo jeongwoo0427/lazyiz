@@ -66,7 +66,7 @@ python -m ipykernel install --user --name molten --display-name "Python (molten)
 # "Could not initialize kernel" 에러. 경로는 jupyter가 직접 계산 → OS 무관)
 python -c "import os, jupyter_core.paths as p; os.makedirs(p.jupyter_runtime_dir(), exist_ok=True)"
 
-# 가상환경 나오
+# 가상환경 종료
 deactivate
 ```
 
@@ -166,7 +166,7 @@ LSP(ts_ls), 자동완성, 포맷팅이 자동으로 설정된다.
 |------|------|
 | `E492: Not an editor command: MoltenInit` | Python 2단계(remote plugin 등록) 재실행 |
 | `No module named 'pynvim'` | venv에 설치 안 됨 → `source ~/.venvs/molten/bin/activate && pip install pynvim` 후 2단계 재실행 |
-| `Could not initialize kernel named ...` | `jupyter kernelspec list` 로 `molten` 커널 확인, 없으면 1단계의 `ipykernel install` 재실행 |
+| `Could not initialize kernel named ...` | ① `No such file or directory: .../runtime/...json` 면 1단계의 runtime 디렉토리 보장 명령 재실행. ② 그 외엔 `jupyter kernelspec list` 로 `molten` 커널 확인, 없으면 `ipykernel install` 재실행 |
 | `Failed to load python3 host` | `~/.venvs/molten/bin/python3` 존재 확인, 없으면 1단계부터 재실행 |
 | 커널은 뜨는데 그래프가 안 보임 | 이미지 지원 터미널(kitty/wezterm/Ghostty) 사용 또는 `image.nvim` backend 변경 |
 
