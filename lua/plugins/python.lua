@@ -1,3 +1,37 @@
+-- 현재 셀/코드블록을 통째로 실행 (커서만 안에 두면 됨, 범위 지정 불필요)
+--  · python  : `# %%` 마커 사이
+--  · markdown : ``` 코드펜스 안쪽 (펜스 줄 제외)
+local function run_current_cell()
+  local cur, last = vim.fn.line("."), vim.fn.line("$")
+  local s, e
+
+  if vim.bo.filetype == "markdown" then
+    local fence = "^%s*```"
+    local open
+    for l = cur, 1, -1 do
+      if vim.fn.getline(l):match(fence) then open = l break end
+    end
+    if not open then return end -- 코드블록 밖이면 무시
+    s, e = open + 1, last
+    for l = open + 1, last do
+      if vim.fn.getline(l):match(fence) then e = l - 1 break end
+    end
+  else
+    local marker = "^#%s*%%%%" -- "# %%" / "#%%"
+    s = 1
+    for l = cur, 1, -1 do
+      if vim.fn.getline(l):match(marker) then s = l break end
+    end
+    e = last
+    for l = s + 1, last do
+      if vim.fn.getline(l):match(marker) then e = l - 1 break end
+    end
+  end
+
+  if s > e then return end
+  vim.fn.MoltenEvaluateRange(s, e)
+end
+
 return {
   -- 가상환경 선택기
   {
@@ -95,44 +129,27 @@ return {
     end,
     keys = {
       -- 커널 초기화 / 선택
-      { "<leader>mi", ":MoltenInit<CR>", desc = "Molten: 커널 초기화", ft = { "python", "julia" } },
-      { "<leader>md", ":MoltenDeinit<CR>", desc = "Molten: 커널 종료", ft = { "python", "julia" } },
+      { "<leader>mi", ":MoltenInit<CR>", desc = "Molten: 커널 초기화", ft = { "python", "julia", "markdown" } },
+      { "<leader>md", ":MoltenDeinit<CR>", desc = "Molten: 커널 종료", ft = { "python", "julia", "markdown" } },
       -- 셀 실행
-      { "<leader>me", ":MoltenEvaluateOperator<CR>", desc = "Molten: 범위 실행 (operator)", ft = { "python", "julia" } },
-      { "<leader>ml", ":MoltenEvaluateLine<CR>", desc = "Molten: 현재 줄 실행", ft = { "python", "julia" } },
-      { "<leader>mr", ":MoltenReevaluateCell<CR>", desc = "Molten: 셀 재실행", ft = { "python", "julia" } },
-      -- 현재 # %% 셀 통째로 실행 (범위 지정 불필요 — 커서만 셀 안에 두면 됨)
-      {
-        "<leader>mc",
-        function()
-          local marker = "^#%s*%%%%" -- "# %%" / "#%%" 매칭
-          local cur, last = vim.fn.line("."), vim.fn.line("$")
-          local s = 1
-          for l = cur, 1, -1 do
-            if vim.fn.getline(l):match(marker) then s = l break end
-          end
-          local e = last
-          for l = s + 1, last do
-            if vim.fn.getline(l):match(marker) then e = l - 1 break end
-          end
-          vim.fn.MoltenEvaluateRange(s, e)
-        end,
-        desc = "Molten: 현재 셀 실행",
-        ft = { "python", "julia" },
-      },
+      { "<leader>me", ":MoltenEvaluateOperator<CR>", desc = "Molten: 범위 실행 (operator)", ft = { "python", "julia", "markdown" } },
+      { "<leader>ml", ":MoltenEvaluateLine<CR>", desc = "Molten: 현재 줄 실행", ft = { "python", "julia", "markdown" } },
+      { "<leader>mr", ":MoltenReevaluateCell<CR>", desc = "Molten: 셀 재실행", ft = { "python", "julia", "markdown" } },
+      -- 현재 셀/코드블록 통째로 실행 (커서만 안에 두면 됨)
+      { "<leader>mc", run_current_cell, desc = "Molten: 현재 셀 실행", ft = { "python", "julia", "markdown" } },
       -- 비주얼 모드 실행
-      { "<leader>mv", ":<C-u>MoltenEvaluateVisual<CR>gv", desc = "Molten: 선택 영역 실행", mode = "v", ft = { "python", "julia" } },
+      { "<leader>mv", ":<C-u>MoltenEvaluateVisual<CR>gv", desc = "Molten: 선택 영역 실행", mode = "v", ft = { "python", "julia", "markdown" } },
       -- 출력 창
-      { "<leader>mo", ":MoltenShowOutput<CR>", desc = "Molten: 출력 표시", ft = { "python", "julia" } },
-      { "<leader>mh", ":MoltenHideOutput<CR>", desc = "Molten: 출력 숨기기", ft = { "python", "julia" } },
+      { "<leader>mo", ":MoltenShowOutput<CR>", desc = "Molten: 출력 표시", ft = { "python", "julia", "markdown" } },
+      { "<leader>mh", ":MoltenHideOutput<CR>", desc = "Molten: 출력 숨기기", ft = { "python", "julia", "markdown" } },
       -- 셀 이동
-      { "[c", ":MoltenPrev<CR>", desc = "Molten: 이전 셀", ft = { "python", "julia" } },
-      { "]c", ":MoltenNext<CR>", desc = "Molten: 다음 셀", ft = { "python", "julia" } },
+      { "[c", ":MoltenPrev<CR>", desc = "Molten: 이전 셀", ft = { "python", "julia", "markdown" } },
+      { "]c", ":MoltenNext<CR>", desc = "Molten: 다음 셀", ft = { "python", "julia", "markdown" } },
       -- 셀 삭제
-      { "<leader>mx", ":MoltenDelete<CR>", desc = "Molten: 셀 삭제", ft = { "python", "julia" } },
+      { "<leader>mx", ":MoltenDelete<CR>", desc = "Molten: 셀 삭제", ft = { "python", "julia", "markdown" } },
       -- 인터럽트 / 재시작
-      { "<leader>ms", ":MoltenInterrupt<CR>", desc = "Molten: 실행 중단", ft = { "python", "julia" } },
-      { "<leader>mR", ":MoltenRestart!<CR>", desc = "Molten: 커널 재시작", ft = { "python", "julia" } },
+      { "<leader>ms", ":MoltenInterrupt<CR>", desc = "Molten: 실행 중단", ft = { "python", "julia", "markdown" } },
+      { "<leader>mR", ":MoltenRestart!<CR>", desc = "Molten: 커널 재시작", ft = { "python", "julia", "markdown" } },
     },
   },
 }
