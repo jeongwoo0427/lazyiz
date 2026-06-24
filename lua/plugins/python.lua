@@ -108,7 +108,7 @@ return {
       -- 출력 창 최대 높이
       vim.g.molten_output_win_max_height = 12
       -- 셀 실행하면 floating 출력창(<leader>mo) 자동으로 띄우기
-      vim.g.molten_auto_open_output = true
+      vim.g.molten_auto_open_output = false
       -- 커서가 셀 밖으로 나가면 출력창 닫기
       vim.g.molten_auto_close_output_windows = true
       -- 마크다운 렌더링
@@ -118,7 +118,7 @@ return {
       -- 이미지 렌더러: image.nvim 사용
       vim.g.molten_image_provider = "image.nvim"
       -- virt text 출력은 끔 (켜져 있으면 실행 시 floating 창이 자동으로 안 뜸 — moltenbuffer.py:120)
-      vim.g.molten_virt_text_output = false
+      vim.g.molten_virt_text_output = true
       vim.g.molten_virt_lines_off_by_1 = true
 
       -- 출력 virt text 색을 주황색으로 (기본은 Comment에 연결돼 회색이라 안 보임)
