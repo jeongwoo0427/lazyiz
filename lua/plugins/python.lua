@@ -25,6 +25,8 @@ return {
         pyright = {
           settings = {
             python = {
+              -- molten venv를 기본 분석 대상으로 (VenvSelect로 프로젝트별 변경 가능)
+              pythonPath = vim.fn.expand("~/.venvs/molten/bin/python"),
               analysis = {
                 useLibraryCodeForTypes = true,
                 autoImportCompletions = true,
