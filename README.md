@@ -8,15 +8,18 @@ LazyVim 기반. Python(Jupyter), Flutter, TypeScript/React 개발 환경 포함.
 
 ### 1. 의존성 설치
 
+> `imagemagick` 는 molten 그래프(matplotlib 등)를 image.nvim 으로 렌더링하는 데 필요하다.
+> 없으면 출력 창은 열려도 그림이 안 보인다.
+
 **macOS**
 ```bash
-brew install neovim python@3.11 node git ripgrep fd
+brew install neovim python@3.11 node git ripgrep fd imagemagick
 ```
 
 **Linux (Ubuntu)**
 ```bash
 sudo add-apt-repository ppa:neovim-ppa/unstable -y && sudo apt update
-sudo apt install -y neovim python3 python3-pip nodejs npm git ripgrep
+sudo apt install -y neovim python3 python3-pip nodejs npm git ripgrep imagemagick
 ```
 
 ---
@@ -168,5 +171,5 @@ LSP(ts_ls), 자동완성, 포맷팅이 자동으로 설정된다.
 | `No module named 'pynvim'` | venv에 설치 안 됨 → `source ~/.venvs/molten/bin/activate && pip install pynvim` 후 2단계 재실행 |
 | `Could not initialize kernel named ...` | ① `No such file or directory: .../runtime/...json` 면 1단계의 runtime 디렉토리 보장 명령 재실행. ② 그 외엔 `jupyter kernelspec list` 로 `molten` 커널 확인, 없으면 `ipykernel install` 재실행 |
 | `Failed to load python3 host` | `~/.venvs/molten/bin/python3` 존재 확인, 없으면 1단계부터 재실행 |
-| 커널은 뜨는데 그래프가 안 보임 | 이미지 지원 터미널(kitty/wezterm/Ghostty) 사용 또는 `image.nvim` backend 변경 |
+| 커널은 뜨는데 그래프가 안 보임 | ① `imagemagick` 설치 확인(`magick -version`) — image.nvim 렌더링 필수. ② 이미지 지원 터미널(kitty/wezterm/Ghostty) 사용. ③ 셀 실행 후 `<leader>mo` 로 출력 창 열기. ④ iTerm2면 `image.nvim` backend 를 `ueberzug` 로 변경 |
 
