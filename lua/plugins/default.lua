@@ -99,6 +99,13 @@ return {
       port_range = { min = 10000, max = 65535 },
       auto_start = true,
       log_level = "info", -- "trace", "debug", "info", "warn", "error"
+      -- Claude가 전체화면(alternate screen)으로 떠서 nvim 터미널에 스크롤백이
+      -- 안 쌓이는 문제 해결. inline 렌더링으로 바꿔 스크롤백 스크롤이 가능해짐.
+      -- DISABLE_MOUSE는 claude가 마우스 휠을 가로채지 않게 해 nvim 휠 스크롤 허용.
+      env = {
+        CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN = "1",
+        CLAUDE_CODE_DISABLE_MOUSE = "1",
+      },
       terminal_cmd = nil, -- Custom terminal command (default: "claude")
       -- For local installations: "~/.claude/local/claude"
       -- For native binary: use output from 'which claude'
