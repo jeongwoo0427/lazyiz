@@ -121,20 +121,32 @@ IDE 재시작 없이, **에디터 노멀 모드**에서:
 `l` `h` 는 neo-tree 손버릇에 맞추려고 바꾼 것입니다.
 NERDTree 원래 기본값은 `o`(열기) / `x`(상위 디렉터리 닫기) 입니다.
 
-파일 조작 키도 같은 방식으로 지정할 수 있습니다.
+### 트리에서 파일 조작
+
+| 키 | 동작 | IDE 액션 | 변수 |
+|---|---|---|---|
+| `a` | 새 파일 | `NewFile` | `NERDTreeMapNewFile` |
+| `A` | 새 폴더 | `NewDir` | `NERDTreeMapNewDir` |
+| `r` | 이름 변경 | `RenameElement` | `NERDTreeMapRename` |
+| `d` | 삭제 | `$Delete` | `NERDTreeMapDelete` |
+| `y` `v` | 복사 / 붙여넣기 | `$Copy` `$Paste` | `NERDTreeMapCopy` `NERDTreeMapPaste` |
+| `m` | 컨텍스트 메뉴 | `ShowPopupMenu` | `NERDTreeMapMenu` |
+| `F6` | 이동 (IDE 기본) | `Move` | — |
+| `I` | 숨김 파일 토글 | `ProjectView.ShowExcludedFiles` | `NERDTreeMapToggleHidden` |
+| `<C-r>` `R` | 새로고침 / 루트 동기화 | `Synchronize` | `NERDTreeMapRefresh` `NERDTreeMapRefreshRoot` |
+| `t` `i` `s` | 새 탭 / 가로 / 세로 분할로 열기 | | `NERDTreeMapOpenInTab` `NERDTreeMapOpenSplit` `NERDTreeMapOpenVSplit` |
+| `Z` | 트리 확대 | `MaximizeToolWindow` | `NERDTreeMapToggleZoom` |
+
+**이동(move)은 대응 변수가 없습니다.** 트리에서 `F6`(IDE 기본 단축키)을 쓰거나,
+`m` 으로 컨텍스트 메뉴를 열어 Move 를 고르면 됩니다.
+
+`d` 는 IntelliJ의 Safe Delete 로 연결되므로 확인 창이 한 번 뜹니다.
+
+바꾸고 싶으면 변수에 원하는 키를 넣으면 됩니다.
 
 ```vim
 let g:NERDTreeMapNewFile = 'a'
 ```
-
-| 변수 | 동작 |
-|---|---|
-| `NERDTreeMapNewFile` `NERDTreeMapNewDir` | 새 파일 / 폴더 |
-| `NERDTreeMapRename` `NERDTreeMapDelete` | 이름 변경 / 삭제 |
-| `NERDTreeMapCopy` `NERDTreeMapPaste` | 복사 / 붙여넣기 |
-| `NERDTreeMapToggleHidden` | 숨김 파일 토글 |
-| `NERDTreeMapJumpParent` `NERDTreeMapJumpRoot` | 부모 / 루트로 |
-| `NERDTreeMapOpenSplit` `NERDTreeMapOpenVSplit` | 분할해서 열기 |
 
 ### 확장
 

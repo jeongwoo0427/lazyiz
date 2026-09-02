@@ -66,10 +66,25 @@ set NERDTree
 let g:NERDTreeMapActivateNode = 'l'
 let g:NERDTreeMapCloseDir = 'h'
 
-" 트리에서 파일 조작이 필요하면 아래 변수들도 같은 방식으로 바꿀 수 있다.
-"   NERDTreeMapNewFile  NERDTreeMapNewDir  NERDTreeMapRename
-"   NERDTreeMapDelete   NERDTreeMapCopy    NERDTreeMapPaste
-"   NERDTreeMapQuit     NERDTreeMapToggleHidden  NERDTreeMapRefresh
+" 파일 조작도 neo-tree 손버릇에 맞춘다.
+"   a 새 파일   A 새 폴더   r 이름변경   d 삭제
+" (d 는 원래 기본값이라 그대로 두고, r 을 rename 으로 옮기면서
+"  원래 r 이던 refresh 는 <C-r> 로 자리를 바꾼다)
+let g:NERDTreeMapNewFile = 'a'
+let g:NERDTreeMapNewDir = 'A'
+let g:NERDTreeMapRename = 'r'
+let g:NERDTreeMapRefresh = '<C-r>'
+
+" A 는 원래 확대(zoom)라 자리를 비켜준다
+let g:NERDTreeMapToggleZoom = 'Z'
+
+" 이동(move)은 대응 변수가 없다. 트리에서 F6(IDE 기본) 또는
+" m 으로 컨텍스트 메뉴를 열어 Move 를 쓴다.
+let g:NERDTreeMapMenu = 'm'
+
+" 그대로 둔 기본값
+"   y 복사   v 붙여넣기   I 숨김 토글   R 루트 새로고침
+"   t 새 탭   i 가로분할   s 세로분할   q 트리 닫기
 
 " ---------------------------------------------------------------------------
 "  3. 창 이동 — Ctrl+h/j/k/l (툴 윈도우 포함)
