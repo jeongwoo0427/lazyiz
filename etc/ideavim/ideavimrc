@@ -100,6 +100,7 @@ sethandler <C-j> a:vim
 sethandler <C-k> a:vim
 sethandler <C-l> a:vim
 sethandler <C-s> a:vim
+sethandler <C-]> a:vim
 
 " Tab 이 현재 vim 소유라 insert 모드에서 자동완성 확정에 쓰이지 않는다.
 " IDE 쪽으로 넘기려면 아래 줄의 주석을 해제할 것.
@@ -134,6 +135,14 @@ nmap <leader>wd <Action>(Unsplit)
 inoremap ;j <Esc>
 vnoremap ;j <Esc>
 cnoremap ;j <Esc>
+
+" Ctrl+] 도 Esc 로 쓴다.
+" 노멀 모드까지 덮는 이유: 원래 <C-]>는 태그 점프(정의로 이동)라,
+" 안 덮으면 Esc 대신 엉뚱한 곳으로 튄다.
+nnoremap <C-]> <Esc>
+inoremap <C-]> <Esc>
+vnoremap <C-]> <Esc>
+cnoremap <C-]> <Esc>
 
 " 10줄 단위 이동
 nnoremap <leader>j 10j

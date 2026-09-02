@@ -74,6 +74,7 @@ IDE 재시작 없이, **에디터 노멀 모드**에서:
 | 키 | 동작 |
 |---|---|
 | `;j` | Esc |
+| `Ctrl+]` | Esc (에디터 한정 — 아래 참고) |
 | `<leader>j` `<leader>k` | 10줄 아래 / 위 |
 | `T` | 탭 닫기 |
 | `<leader>l` | 포맷 + import 정리 |
@@ -220,6 +221,13 @@ Settings → Tools → Terminal → "Move focus to the Editor with:"
 
 이건 IDE 설정이라 **이 폴더를 옮기는 것만으로는 재현되지 않습니다.**
 새 PC에서 한 번 더 지정해야 합니다.
+
+**`Ctrl+]` 는 에디터 안에서만 Esc 입니다.** IdeaVim은 에디터만 담당하므로
+대화상자·팝업·툴 윈도우에서는 먹지 않습니다. IDE 전역으로 넓히려면
+`Settings → Keymap → "Escape"` 액션에 `Ctrl+]` 를 **추가** 단축키로 등록하세요
+(기존 `Esc` 는 그대로 두면 됩니다). 다만 대화상자의 취소는 Swing이 직접
+처리하는 영역이라 키맵으로도 닿지 않습니다.
+모든 앱에서 예외 없이 쓰고 싶으면 Karabiner-Elements 같은 OS 레벨 리맵이 필요합니다.
 
 **`<leader>l` 은 두 액션을 연달아 실행합니다.** IdeaVim이 액션을 비동기로 처리해서
 드물게 뒤엣것(import 정리)이 씹힐 수 있습니다. 그럴 땐 두 줄로 나누세요.
