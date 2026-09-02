@@ -100,7 +100,7 @@ sethandler <C-j> a:vim
 sethandler <C-k> a:vim
 sethandler <C-l> a:vim
 sethandler <C-s> a:vim
-sethandler <C-]> a:vim
+sethandler <C-[> a:vim
 
 " Tab 이 현재 vim 소유라 insert 모드에서 자동완성 확정에 쓰이지 않는다.
 " IDE 쪽으로 넘기려면 아래 줄의 주석을 해제할 것.
@@ -136,13 +136,15 @@ inoremap ;j <Esc>
 vnoremap ;j <Esc>
 cnoremap ;j <Esc>
 
-" Ctrl+] 도 Esc 로 쓴다.
-" 노멀 모드까지 덮는 이유: 원래 <C-]>는 태그 점프(정의로 이동)라,
-" 안 덮으면 Esc 대신 엉뚱한 곳으로 튄다.
-nnoremap <C-]> <Esc>
-inoremap <C-]> <Esc>
-vnoremap <C-]> <Esc>
-cnoremap <C-]> <Esc>
+" Ctrl+[ 도 Esc 로 쓴다 (터미널에서 Ctrl+[ 가 ESC 와 같은 바이트인 관습).
+" GUI에서는 자동으로 같지 않으므로 명시적으로 매핑한다.
+" macOS 키맵에서는 <C-[> 가 비어 있지만(EditorCodeBlockStart 는 Cmd+Alt+[ 로 재정의됨),
+" Windows/Linux 기본 키맵에서는 <C-[> 가 EditorCodeBlockStart 를 물고 있다.
+" sethandler 로 vim이 가져와야 어느 OS에서든 같게 동작한다.
+nnoremap <C-[> <Esc>
+inoremap <C-[> <Esc>
+vnoremap <C-[> <Esc>
+cnoremap <C-[> <Esc>
 
 " 10줄 단위 이동
 nnoremap <leader>j 10j
