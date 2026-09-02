@@ -57,9 +57,19 @@ set ReplaceWithRegister
 set exchange
 set sneak
 
-" 프로젝트 트리에서도 vim 키로 이동한다 (j/k/h/l, gg/G, o, q ...)
+" 프로젝트 트리에서도 vim 키로 이동한다.
 " 이게 없으면 트리는 화살표 키로만 움직인다.
 set NERDTree
+
+" NERDTree 기본값은 o(열기) / x(상위 디렉터리 닫기) 라서
+" neo-tree 손버릇에 맞게 l(열기·펼치기) / h(닫기) 로 바꾼다.
+let g:NERDTreeMapActivateNode = 'l'
+let g:NERDTreeMapCloseDir = 'h'
+
+" 트리에서 파일 조작이 필요하면 아래 변수들도 같은 방식으로 바꿀 수 있다.
+"   NERDTreeMapNewFile  NERDTreeMapNewDir  NERDTreeMapRename
+"   NERDTreeMapDelete   NERDTreeMapCopy    NERDTreeMapPaste
+"   NERDTreeMapQuit     NERDTreeMapToggleHidden  NERDTreeMapRefresh
 
 " ---------------------------------------------------------------------------
 "  3. 창 이동 — Ctrl+h/j/k/l (툴 윈도우 포함)

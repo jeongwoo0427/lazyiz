@@ -110,13 +110,31 @@ IDE 재시작 없이, **에디터 노멀 모드**에서:
 
 트리에 포커스가 있을 때 vim 키가 그대로 먹습니다.
 
-| 키 | 동작 |
+| 키 | 동작 | 바꾸는 변수 |
+|---|---|---|
+| `j` `k` | 아래 / 위 | — |
+| `l` | 열기 · 폴더 펼치기 | `NERDTreeMapActivateNode` |
+| `h` | 폴더 닫기 | `NERDTreeMapCloseDir` |
+| `gg` `G` | 처음 / 끝 | — |
+| `q` | 트리 닫기 | `NERDTreeMapQuit` |
+
+`l` `h` 는 neo-tree 손버릇에 맞추려고 바꾼 것입니다.
+NERDTree 원래 기본값은 `o`(열기) / `x`(상위 디렉터리 닫기) 입니다.
+
+파일 조작 키도 같은 방식으로 지정할 수 있습니다.
+
+```vim
+let g:NERDTreeMapNewFile = 'a'
+```
+
+| 변수 | 동작 |
 |---|---|
-| `j` `k` | 아래 / 위 |
-| `h` `l` | 접기 / 펼치기 |
-| `o` `Enter` | 열기 |
-| `gg` `G` | 처음 / 끝 |
-| `q` | 트리 닫기 |
+| `NERDTreeMapNewFile` `NERDTreeMapNewDir` | 새 파일 / 폴더 |
+| `NERDTreeMapRename` `NERDTreeMapDelete` | 이름 변경 / 삭제 |
+| `NERDTreeMapCopy` `NERDTreeMapPaste` | 복사 / 붙여넣기 |
+| `NERDTreeMapToggleHidden` | 숨김 파일 토글 |
+| `NERDTreeMapJumpParent` `NERDTreeMapJumpRoot` | 부모 / 루트로 |
+| `NERDTreeMapOpenSplit` `NERDTreeMapOpenVSplit` | 분할해서 열기 |
 
 ### 확장
 
