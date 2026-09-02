@@ -1,0 +1,186 @@
+" ============================================================================
+"  ideavimrc — Android Studio(IdeaVim)를 LazyVim 손버릇에 맞춘 설정
+"
+"  원본  : ~/.config/nvim/lua/config/keymaps.lua
+"  실체  : ~/.config/nvim/etc/ideavim/ideavimrc  (~/.ideavimrc 는 심볼릭 링크)
+"  재적용: 에디터 노멀 모드에서  :source ~/.ideavimrc
+"  끄기  : 이 파일 이름만 바꾸면 순정 IdeaVim으로 돌아감
+"
+"  주의: set 명령 뒤에는 같은 줄에 주석(")을 달 수 없다. 옵션 값으로 읽힌다.
+" ============================================================================
+
+" ---------------------------------------------------------------------------
+"  1. 기본 옵션
+" ---------------------------------------------------------------------------
+let mapleader = " "
+
+" nvim options.lua 와 동일한 클립보드 동작
+set clipboard+=unnamedplus
+
+set scrolloff=8
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set showmode
+
+" ';j' 처럼 두 키 조합의 대기 시간(ms)
+set timeout
+set timeoutlen=500
+
+" J(줄 합치기)를 IDE의 똑똑한 합치기로
+set ideajoin
+
+" 리팩터링 중 vim 모드 유지
+set idearefactormode=keep
+
+" ---------------------------------------------------------------------------
+"  2. IdeaVim 내장 확장
+"     surround        cs"'  ds"  ysiw"
+"     commentary      gcc  gc{motion}
+"     highlightedyank yank 하이라이트
+"     matchit         % 확장
+"     argtextobj      cia  dia   (인자 단위)
+"     textobj-entire  cae  dae   (파일 전체)
+"     ReplaceWithRegister  gr{motion}
+"     exchange        cx  cxx
+"     sneak           s{2글자} 점프
+"     NERDTree        프로젝트 트리를 vim 키로 조작
+" ---------------------------------------------------------------------------
+set surround
+set commentary
+set highlightedyank
+set matchit
+set argtextobj
+set textobj-entire
+set ReplaceWithRegister
+set exchange
+set sneak
+
+" 프로젝트 트리에서도 vim 키로 이동한다 (j/k/h/l, gg/G, o, q ...)
+" 이게 없으면 트리는 화살표 키로만 움직인다.
+set NERDTree
+
+" ---------------------------------------------------------------------------
+"  3. 창 이동 — Ctrl+h/j/k/l (툴 윈도우 포함)
+"
+"  sethandler 는 '이 키를 IDE가 아니라 vim이 처리한다'를 모드별로 지정한다.
+"  a:vim = 모든 모드,  n:vim i:ide = 노멀은 vim / 인서트는 IDE
+"
+"  이미 IDE 충돌 대화상자에서 vim 쪽으로 정해두신 키들이라,
+"  같은 선택을 파일에 명시해 새 PC에서도 그대로 재현되게 한다.
+" ---------------------------------------------------------------------------
+sethandler <C-h> a:vim
+sethandler <C-j> a:vim
+sethandler <C-k> a:vim
+sethandler <C-l> a:vim
+sethandler <C-s> a:vim
+
+" Tab 이 현재 vim 소유라 insert 모드에서 자동완성 확정에 쓰이지 않는다.
+" IDE 쪽으로 넘기려면 아래 줄의 주석을 해제할 것.
+" sethandler <Tab> n:vim i:ide
+
+" 툴 윈도우 포함 화면 이동
+"   <C-h> 왼쪽  → 프로젝트 트리
+"   <C-j> 아래  → 터미널
+"   <C-k> <C-l> → 에디터로 복귀
+"
+" 툴 윈도우 안에서는 IdeaVim이 동작하지 않으므로, 돌아올 때는 Esc 를 쓴다.
+" (IntelliJ 기본 동작: 툴 윈도우에서 Esc → 에디터로 포커스 복귀)
+nmap <C-h> <Action>(ActivateProjectToolWindow)
+nmap <C-j> <Action>(ActivateTerminalToolWindow)
+nmap <C-k> <Action>(FocusEditor)
+nmap <C-l> <Action>(FocusEditor)
+
+" 에디터 분할 사이 이동은 vim 원래 방식 그대로 사용한다.
+"   <C-w>h  <C-w>j  <C-w>k  <C-w>l
+" (IdeaVim 기본 기능이라 별도 매핑이 필요 없다)
+
+" 분할 만들고 없애기 (LazyVim <leader>w 계열)
+nmap <leader>wv <Action>(SplitVertically)
+nmap <leader>ws <Action>(SplitHorizontally)
+nmap <leader>wd <Action>(Unsplit)
+
+" ---------------------------------------------------------------------------
+"  4. keymaps.lua 이식 — 직접 만드신 매핑들
+" ---------------------------------------------------------------------------
+
+" 빠른 Esc
+inoremap ;j <Esc>
+vnoremap ;j <Esc>
+cnoremap ;j <Esc>
+
+" 10줄 단위 이동
+nnoremap <leader>j 10j
+nnoremap <leader>k 10k
+vnoremap <leader>j 10j
+vnoremap <leader>k 10k
+
+" T — 탭(버퍼) 닫기
+nmap T <Action>(CloseContent)
+vmap T <Action>(CloseContent)
+
+" <leader>l — 코드 정리 (포맷 + import 정리)
+nmap <leader>l <Action>(ReformatCode)<Action>(OptimizeImports)
+vmap <leader>l <Action>(ReformatCode)<Action>(OptimizeImports)
+
+" <leader><CR> — 코드 액션(인텐션)
+nmap <leader><CR> <Action>(ShowIntentionActions)
+vmap <leader><CR> <Action>(ShowIntentionActions)
+
+" <leader>. — 시그니처 도움말
+nmap <leader>. <Action>(ParameterInfo)
+
+" <leader>h — 호버(문서 팝업)
+" 마우스 호버와 같은 팝업을 원하면 ShowHoverInfo 로 교체
+nmap <leader>h <Action>(QuickJavaDoc)
+
+" <leader>r — 이름 바꾸기
+nmap <leader>r <Action>(RenameElement)
+
+" <leader><leader> — leader 취소용(오른쪽 이동)
+nnoremap <leader><leader> l
+
+" 삭제는 클립보드를 더럽히지 않는다 / 잘라내기는 visual x 하나로
+nnoremap d "_d
+vnoremap d "_d
+nnoremap D "_D
+vnoremap D "_D
+nnoremap x "_x
+vnoremap x d
+
+" ---------------------------------------------------------------------------
+"  5. LazyVim 기본 매핑 중 손에 붙은 것들
+" ---------------------------------------------------------------------------
+
+" 탭 넘기기
+nmap H <Action>(PreviousTab)
+nmap L <Action>(NextTab)
+
+" 찾기
+nmap <leader>ff <Action>(GotoFile)
+nmap <leader>fg <Action>(FindInPath)
+nmap <leader>/ <Action>(FindInPath)
+nmap <leader>, <Action>(RecentFiles)
+
+" 툴 윈도우
+nmap <leader>e <Action>(ActivateProjectToolWindow)
+nmap <leader>t <Action>(ActivateTerminalToolWindow)
+nmap <leader>xx <Action>(ActivateProblemsViewToolWindow)
+nmap <leader>gg <Action>(ActivateVersionControlToolWindow)
+
+" 코드 이동
+nmap gd <Action>(GotoDeclaration)
+nmap gI <Action>(GotoImplementation)
+nmap gr <Action>(ShowUsages)
+nmap gR <Action>(FindUsages)
+nmap ]d <Action>(GotoNextError)
+nmap [d <Action>(GotoPreviousError)
+
+" 실행 / 저장
+nmap <leader>rr <Action>(Run)
+nmap <leader>rd <Action>(Debug)
+nmap <C-s> <Action>(SaveAll)
+
+" 검색 하이라이트 끄기
+nnoremap <leader>ur :nohlsearch<CR>
