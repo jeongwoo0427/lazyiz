@@ -18,6 +18,11 @@ let mapleader = " "
 set clipboard+=unnamedplus
 
 set scrolloff=8
+
+" Ctrl+v 블록 선택에서 글자가 없는 빈 영역까지 커서가 간다.
+" LazyVim options.lua 의 opt.virtualedit = "block" 과 같은 설정.
+" 값은 block / insert / all / onemore 를 쓸 수 있다.
+set virtualedit=block
 set incsearch
 set hlsearch
 set ignorecase
