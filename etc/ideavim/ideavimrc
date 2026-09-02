@@ -19,9 +19,13 @@ set clipboard+=unnamedplus
 
 set scrolloff=8
 
-" Ctrl+v 블록 선택에서 글자가 없는 빈 영역까지 커서가 간다.
-" LazyVim options.lua 의 opt.virtualedit = "block" 과 같은 설정.
-" 값은 block / insert / all / onemore 를 쓸 수 있다.
+" LazyVim options.lua 의 opt.virtualedit = "block" 과 짝을 맞춘 선언.
+"
+" 주의: IdeaVim 2.46 은 이 값을 읽지 않는다. virtualedit 을 참조하는 코드가
+" usesVirtualSpace 하나뿐이고 거기서 "onemore" 만 검사한다. 즉 block 은 무시된다.
+" Ctrl+v 블록 선택을 빈 영역까지 넓히려면 IDE 설정을 켜야 한다:
+"   Settings > Editor > General > Virtual Space > After the end of line
+" (IDE 설정이라 이 저장소를 옮기는 것만으로는 따라오지 않는다)
 set virtualedit=block
 set incsearch
 set hlsearch
