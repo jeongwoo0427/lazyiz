@@ -176,9 +176,12 @@ vmap <leader><CR> <Action>(ShowIntentionActions)
 " <leader>. — 시그니처 도움말
 nmap <leader>. <Action>(ParameterInfo)
 
-" <leader>h — 호버(문서 팝업)
-" 마우스 호버와 같은 팝업을 원하면 ShowHoverInfo 로 교체
-nmap <leader>h <Action>(QuickJavaDoc)
+" <leader>h — 호버. 마우스를 올렸을 때와 같은 팝업이라 에러 메시지도 같이 뜬다.
+" QuickJavaDoc(F1)은 문서만 보여주고 에러는 빼먹는다.
+nmap <leader>h <Action>(ShowHoverInfo)
+
+" <leader>cd — 에러 설명만 (LazyVim 의 line diagnostics 자리)
+nmap <leader>cd <Action>(ShowErrorDescription)
 
 " <leader>r — 이름 바꾸기
 nmap <leader>r <Action>(RenameElement)
