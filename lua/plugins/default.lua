@@ -163,7 +163,15 @@ return {
       { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
       { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
     },
-  }
+  },
+  { -- LSP 진행 상황 알림(우측 하단 "1 file to analyze" 등) 끄기
+    "folke/noice.nvim",
+    opts = {
+      lsp = {
+        progress = { enabled = false },
+      },
+    },
+  },
   -- { -- Terminal screen plugin
   --   "folke/snacks.nvim",
   --   opts = {
