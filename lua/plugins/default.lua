@@ -31,7 +31,7 @@ return {
       },
       filetype = {
         -- 언어별 실행 커맨드 (필요한 언어 여기에 추가)
-        python = "python3 -u", -- -u: 출력 버퍼링 끄기 (실시간 출력)
+        python = "uv run python -u", -- uv 프로젝트의 .venv로 실행, -u: 출력 버퍼링 끄기 (실시간 출력)
         javascript = "node",
         sh = "bash",
       },
