@@ -125,7 +125,6 @@ plt.plot([1,2,3]); plt.show()
 | `<leader>mo` / `<leader>mh` | 출력 창 표시 / 숨기기 |
 | `[c` / `]c` | 이전 / 다음 셀 |
 | `<leader>ms` / `<leader>mR` | 실행 중단 / 커널 재시작 |
-| `<leader>cv` | 가상환경 변경 (VenvSelect) |
 
 > **그래프 이미지**(matplotlib 등)는 kitty / wezterm / Ghostty 같은 이미지 지원 터미널에서만 보인다.
 > iTerm2는 `lua/plugins/python.lua` 의 `image.nvim` backend를 `"ueberzug"` 로 변경. 기본 Terminal.app은 텍스트만 표시.

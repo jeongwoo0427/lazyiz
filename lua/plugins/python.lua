@@ -33,25 +33,7 @@ local function run_current_cell()
 end
 
 return {
-  -- 가상환경 선택기
-  {
-    "linux-cultist/venv-selector.nvim",
-    branch = "main",
-    dependencies = { "neovim/nvim-lspconfig", "nvim-telescope/telescope.nvim" },
-    cmd = "VenvSelect",
-    opts = {
-      settings = {
-        options = {
-          notify_user_on_venv_activation = true,
-        },
-      },
-    },
-    keys = {
-      { "<leader>cv", "<cmd>VenvSelect<cr>", desc = "Select VirtualEnv", ft = "python" },
-    },
-  },
-
-  -- pyright: 외부 라이브러리 코드 추적 + venv 자동 감지
+  -- pyright: 외부 라이브러리 코드 추적 + uv 프로젝트의 .venv 사용
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -59,8 +41,8 @@ return {
         pyright = {
           settings = {
             python = {
-              -- molten venv를 기본 분석 대상으로 (VenvSelect로 프로젝트별 변경 가능)
-              pythonPath = vim.fn.expand("~/.venvs/molten/bin/python"),
+              -- nvim을 uv 프로젝트 루트에서 켠다는 전제
+              pythonPath = vim.fn.getcwd() .. "/.venv/bin/python",
               analysis = {
                 useLibraryCodeForTypes = true,
                 autoImportCompletions = true,
