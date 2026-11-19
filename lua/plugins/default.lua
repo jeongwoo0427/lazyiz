@@ -1,3 +1,30 @@
+-- macOS: <leader>rr로 띄운 python(matplotlib 그래프 창 등)이 포커스를 가져가면 터미널로 되돌린다.
+--  · 키를 누른 순간의 앞 앱(= nvim이 떠 있는 터미널)을 기억
+--  · REFOCUS_SECONDS 동안 이번 실행의 python 앱이 앞으로 나올 때마다 터미널을 다시 활성화
+--    (그 사이엔 그래프 창을 클릭해도 터미널로 돌아옴. 시간이 지나면 손 뗌)
+--  · 실행 전부터 떠 있던 그래프 창은 건드리지 않음
+local REFOCUS_SECONDS = 15
+local REFOCUS_SCRIPT = [[
+asn() { sed -n 's/.*\(0x[0-9a-f]*-0x[0-9a-f]*\).*/\1/p'; }
+term=$(lsappinfo info -only bundleid "$(lsappinfo front)" | sed -n 's/.*="\([^"]*\)".*/\1/p')
+[ -n "$term" ] || exit 0
+old=$(lsappinfo find name=python | asn)
+end=$(( $(date +%s) + $1 ))
+while [ "$(date +%s)" -lt "$end" ]; do
+  front=$(lsappinfo front | asn)
+  if lsappinfo find name=python | asn | grep -vxF "$old" | grep -qxF "$front"; then
+    open -b "$term"
+  fi
+  sleep 0.2
+done
+]]
+local refocus_job
+local function keep_terminal_focus()
+  if vim.fn.has("mac") == 0 then return end
+  if refocus_job then pcall(refocus_job.kill, refocus_job, 9) end
+  refocus_job = vim.system({ "sh", "-c", REFOCUS_SCRIPT, "refocus", tostring(REFOCUS_SECONDS) })
+end
+
 return {
   { -- 필수: (Bwipeout)으로 버퍼 안전하게 닫기 (Lsp 유지용)
     "famiu/bufdelete.nvim",
@@ -37,7 +64,15 @@ return {
       },
     },
     keys = {
-      { "<leader>rr", "<cmd>RunFile<cr>",  desc = "Run: 현재 파일 실행" },
+      {
+        "<leader>rr",
+        function()
+          local is_python = vim.bo.filetype == "python" -- RunFile 후엔 출력창으로 포커스가 가므로 미리 확인
+          vim.cmd("RunFile")
+          if is_python then keep_terminal_focus() end
+        end,
+        desc = "Run: 현재 파일 실행",
+      },
       { "<leader>rc", "<cmd>RunClose<cr>", desc = "Run: 출력창 닫기" },
     },
   },
